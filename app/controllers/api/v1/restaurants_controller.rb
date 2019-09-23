@@ -1,12 +1,14 @@
 class Api::V1::RestaurantsController < Api::V1::BaseController
   acts_as_token_authentication_handler_for User, except: [:index, :show]
-  before_action :set_restaurant, only: [:show, :update]
+  before_action :set_restaurant, only: [:show, :update, :destroy]
 
   def index
     @restaurants = policy_scope(Restaurant)
   end
 
   def show
+    @restaurant = Restaurant.find(params[:id])
+    authorize @restaurant
   end
 
   def create
@@ -28,11 +30,10 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
     end
   end
 
-  before_action :set_restaurant, only: [:show, :destroy]
-
   def destroy
     @restaurant.destroy
-    head :no_content
+    # head :no_content
+    render json: { message: "Deleted sucessfully!" }
     # No need to create a `destroy.json.jbuilder` view
   end
 
