@@ -28,6 +28,8 @@ class Api::V1::RestaurantsController < Api::V1::BaseController
     end
   end
 
+  before_action :set_restaurant, only: [:show, :destroy]
+
   def destroy
     @restaurant.destroy
     head :no_content
